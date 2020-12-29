@@ -52,7 +52,7 @@ public class Hash_table<T> implements Set<T> {
 
 
     private int hash2(Object o){
-        return o.hashCode() % data.size();
+        return Math.abs(o.hashCode()) % data.size();
     }
 
     @Override
@@ -139,7 +139,7 @@ public class Hash_table<T> implements Set<T> {
             return true;
         }
         if (data.get(h).equals(t)) return false;
-        int step = hash2(t);
+        int step = Math.abs(t.hashCode()) % data.size();
         int i = h + step;
         while(i != h){
             if (data.get(i) == null){
