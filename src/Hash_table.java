@@ -4,7 +4,7 @@ public class Hash_table<T> implements Set<T> {
 
     ArrayList<T> data = new ArrayList<T>();
     int total = 0;
-    static final int INITIAL_CAPACITY = 47;
+    int size = 47;
 
     static class HashIterator<T> implements Iterator<T>{
 
@@ -21,8 +21,7 @@ public class Hash_table<T> implements Set<T> {
             while(pos < master.data.size() && master.data.get(pos) == null){
                 pos++;
             }
-            if (pos < master.data.size()) return true;
-            else return false;
+            return pos < master.data.size();
         }
 
         @Override
@@ -45,11 +44,10 @@ public class Hash_table<T> implements Set<T> {
     }
 
     public Hash_table(){
-        for (int i =0; i< INITIAL_CAPACITY; i++){
+        for (int i =0; i< size; i++){
             data.add(null);
         }
     }
-
 
     private int hash2(Object o){
         return Math.abs(o.hashCode()) % data.size();
@@ -98,9 +96,9 @@ public class Hash_table<T> implements Set<T> {
     public Object[] toArray() {
         Object[] ar = new Object[total];
         int count = 0;
-        for (int i = 0; i< data.size(); i++){
-            if (data.get(i)!= null){
-                ar[count] = data.get(i);
+        for (T datEl : data) {
+            if (datEl != null) {
+                ar[count] = datEl;
                 count++;
             }
         }
@@ -110,9 +108,9 @@ public class Hash_table<T> implements Set<T> {
     public <T1> T1[] toArray(T1[] t1s) {
         int count = 0;
         if (t1s.length <= total){
-            for (int i = 0; i< data.size(); i++){
-                if (data.get(i) != null){
-                    t1s[count] = (T1) data.get(i);
+            for (T datEl : data) {
+                if (datEl != null) {
+                    t1s[count] = (T1) datEl;
                     count++;
                 }
             }
@@ -120,18 +118,53 @@ public class Hash_table<T> implements Set<T> {
         }
         else{
             T1[] newAr = (T1[]) new Object[total];
-            for (int i = 0; i< data.size(); i++){
-                if (data.get(i)!= null){
-                    newAr[count] = (T1) data.get(i);
+            for (T datEl : data) {
+                if (datEl != null) {
+                    newAr[count] = (T1) datEl;
                     count++;
                 }
             }
             return newAr;
         }
     }
+    public int Eratosfen(int n) {
+        boolean[] primes = new boolean[n+1];
+
+        Arrays.fill(primes, true);
+        primes[0] = false;
+        primes[1] = false;
+        for (int i = 2; i < primes.length; i++) {
+            if (primes[i]) {
+                for (int j = 2; i * j < primes.length; ++j) {
+                    primes[i * j] = false;
+
+                }
+            }
+        }
+        for (int i = n; i>0; i--){
+            if (primes[i]) return i;
+        }
+        return -1;
+    }
+
+    public void reHash(T t){
+        int temp = size*2;
+        size = Eratosfen(temp);
+
+        ArrayList<T> newData = new ArrayList<>();
+        for (int i = 0; i < size; i++){
+            newData.add(null);
+        }
+        newData.addAll(data);
+        data = newData;
+        data.add(t);
+    }
 
     public boolean add(T t) {
-        if (total == data.size()) return false;
+        if (total == data.size()){
+            reHash(t);
+            return true;
+        }
         int h = Math.abs(t.hashCode()) % data.size();
         if (data.get(h) == null){
             data.set(h, t);
@@ -139,8 +172,8 @@ public class Hash_table<T> implements Set<T> {
             return true;
         }
         if (data.get(h).equals(t)) return false;
-        int step = Math.abs(t.hashCode()) % data.size();
-        int i = h + step;
+        int st = Math.abs(t.hashCode()) % data.size();
+        int i = h + st;
         while(i != h){
             if (data.get(i) == null){
                 data.set(i, t);
@@ -148,7 +181,7 @@ public class Hash_table<T> implements Set<T> {
                 return true;
             }
             if (data.get(i).equals(t)) return false;
-            i = (i + step) % data.size();
+            i = (i + st) % data.size();
         }
         return false;
     }
@@ -162,8 +195,8 @@ public class Hash_table<T> implements Set<T> {
             total--;
             return true;
         }
-        int step = hash2(o);
-        int i = h + step;
+        int st = Math.abs(o.hashCode()) % data.size();
+        int i = h + st;
         while(i != h){
             if (data.get(i) == null) return false;
             if (data.get(i).equals(o)){
@@ -171,7 +204,7 @@ public class Hash_table<T> implements Set<T> {
                 total--;
                 return true;
             }
-            i = (i + step) % data.size();
+            i = (i + st) % data.size();
         }
         return false;
     }
@@ -188,8 +221,7 @@ public class Hash_table<T> implements Set<T> {
         for (var elem: collection) {
             add(elem);
         }
-        if (total > oldSize) return true;
-        else return false;
+        return total > oldSize;
 
     }
 
@@ -202,8 +234,7 @@ public class Hash_table<T> implements Set<T> {
                 total--;
             }
         }
-        if (total < oldSize) return true;
-        else return false;
+        return total < oldSize;
     }
 
     public boolean removeAll(Collection<?> collection) {
@@ -215,8 +246,7 @@ public class Hash_table<T> implements Set<T> {
                 total--;
             }
         }
-        if (total < oldSize) return true;
-        else return false;
+        return total < oldSize;
     }
 
     public void clear() {
