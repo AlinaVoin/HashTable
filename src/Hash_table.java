@@ -8,7 +8,7 @@ public class Hash_table<T> implements Set<T> {
 
     static class HashIterator<T> implements Iterator<T>{
 
-        int pos = -1;
+        int pos = 0;
         Hash_table<T> master = null;
         public HashIterator(Hash_table<T> ht){
             master = ht;

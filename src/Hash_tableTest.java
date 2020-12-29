@@ -1,4 +1,5 @@
 import java.util.ArrayDeque;
+import java.util.Iterator;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -32,29 +33,53 @@ class Hash_tableTest {
 
     @org.junit.jupiter.api.Test
     void iterator() {
+        Hash_table<String> testTable = new Hash_table<>();
+        testTable.add("hi");
+        testTable.add(" , hello");
+        testTable.add(" nice to meet you!");
+        testTable.add(" 1");
+        testTable.add(" 23");
+        testTable.add(" 456");
+        assertTrue(testTable.iterator().hasNext());
+
+        Iterator<String> testTable2 = testTable.iterator();
+        while(testTable2.hasNext()){
+            testTable.iterator().remove();
+        }
+        assertEquals(0, testTable.size());
     }
 
     @org.junit.jupiter.api.Test
     void toArray() {
+        Hash_table<String> testTable = new Hash_table<>();
+        testTable.add("hi");
+        testTable.add(" , hello");
+        testTable.add(" , how are you");
+        Object[] newAr = testTable.toArray();
+        assertEquals(newAr[2], "hi");
+        assertEquals(newAr[1], " , hello");
+        assertEquals(newAr[0], " , how are you");
     }
 
-//    @org.junit.jupiter.api.Test
-//    void testToArray() {
-//        Hash_table<String> testTable = new Hash_table<>();
-//        testTable.add("hi");
-//        testTable.add(" , hello");
-//        testTable.add(" , how are you");
-//        String[] newAr = (String[]) testTable.toArray();
-//        assertEquals(newAr[0], "hi");
-//        assertEquals(newAr[1], " , hello");
-//        assertEquals(newAr[2], " , how are you");
-//    }
+    @org.junit.jupiter.api.Test
+    void testToArray() {
+        Hash_table<String> testTable = new Hash_table<>();
+        testTable.add("hi");
+        testTable.add(" , hello");
+        testTable.add(" , how are you");
+        Object[] newAr = testTable.toArray();
+        assertEquals(newAr[2], "hi");
+        assertEquals(newAr[1], " , hello");
+        assertEquals(newAr[0], " , how are you");
+    }
 
     @org.junit.jupiter.api.Test
     void add() {
         Hash_table<String> testTable = new Hash_table<>();
         testTable.add("hi");
         testTable.add(" , hello");
+        assertTrue(testTable.size() == 2 && testTable.contains("hi") && testTable.contains(" , hello"));
+        testTable.add("hi");
         assertTrue(testTable.size() == 2 && testTable.contains("hi") && testTable.contains(" , hello"));
     }
 
